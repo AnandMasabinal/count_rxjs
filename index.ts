@@ -1,9 +1,12 @@
-import { of } from 'rxjs'; 
-import { map } from 'rxjs/operators';
+import { fromEvent } from 'rxjs'; 
+import { map,buffer,throttleTime,filter} from 'rxjs/operators';
 
 
-const source = of('World').pipe(
-  map(x => `Hello ${x}!`)
-);
+const clicks=fromEvent(document,'click');
+clicks
+.pipe(
+  buffer(clicks.pipe(throttleTime(250))),
+  filter(clickArray=>clickArray.length>1)
 
-source.subscribe(x => console.log(x));
+)
+.subscribe(x=>console.log(x));
